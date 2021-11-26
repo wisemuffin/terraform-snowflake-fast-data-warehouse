@@ -3,11 +3,11 @@ locals {
   sysadmin_role = "SYSADMIN"
   employees = {
     "EMPLOYEE_A" = {
-      name       = "bigboy"
-      login_name = "bigboy"
+      name       = "davidgriffithsgg777@gmail.com"
+      login_name = "davidgriffithsgg777@gmail.com"
     }
     "EMPLOYEE_B" = {
-      name  = "wisemuffin"
+      name  = "wisemuffinhubspot@gmail.com"
       email = "wisemuffinhubspot@gmail.com"
     }
   }
@@ -19,4 +19,5 @@ locals {
     "DBT_CLOUD_USER" = {
     }
   }
+  monitored_warehouses = []
 }

@@ -41,15 +41,23 @@ module "bulk_warehouses" {
   source = "./modules/bulk_warehouses"
 
   warehouses = {
-    PROCESSING_WH = { size = "medium" }
-    REPORTING_WH  = {}
+    PROCESSING_WH = {
+      warehouse_size = "medium",
+      auto_suspend   = 120,
+      # create_resource_monitor = true #TODO resource monitors can only be granted by accountadmin. waiting for this to change
+    }
+    REPORTING_WH = {
+      warehouse_size = "x-small",
+      auto_suspend   = 60,
+      # create_resource_monitor = true #TODO resource monitors can only be granted by accountadmin. waiting for this to change
+    }
   }
 }
 
 // APPLICATION DATABASES
 // databases (and system users) to be leveraged for a single purpose
 module "analytics_db" {
-  for_each = toset(["ANALYTICS"])
+  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING"])
   source   = "./modules/application_database"
 
   database_name        = each.value
@@ -65,6 +73,18 @@ module "raw_db" {
   source = "./modules/application_database"
 
   database_name                = "RAW"
+  create_application_user      = true
+  create_application_warehouse = true
+  grant_admin_to_roles         = [local.sysadmin_role]
+  grant_read_to_roles = [
+    module.bulk_roles.roles["READER"].name,
+  ]
+}
+
+module "airbyte_db" {
+  source = "./modules/application_database"
+
+  database_name                = "AIRBYTE"
   create_application_user      = true
   create_application_warehouse = true
   grant_admin_to_roles         = [local.sysadmin_role]
