@@ -34,6 +34,8 @@ module "bulk_roles" {
     READER    = {}
     ANALYST   = {}
     DBT_CLOUD = {}
+    DATAFOLD  = {}
+
   }
 }
 
@@ -51,18 +53,23 @@ module "bulk_warehouses" {
       auto_suspend   = 60,
       # create_resource_monitor = true #TODO resource monitors can only be granted by accountadmin. waiting for this to change
     }
+    DATAFOLD_WH = {
+      warehouse_size = "x-small",
+      auto_suspend   = 60,
+      # create_resource_monitor = true #TODO resource monitors can only be granted by accountadmin. waiting for this to change
+    }
   }
 }
 
 // APPLICATION DATABASES
 // databases (and system users) to be leveraged for a single purpose
 module "analytics_db" {
-  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING"])
+  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING", "ANALYTICS_TPCH", "ANALYTICS_TPCH_DEV"])
   source   = "./modules/application_database"
 
   database_name        = each.value
-  grant_admin_to_roles = [local.sysadmin_role]
-  grant_admin_to_users = [module.systems.users["DBT_CLOUD_USER"].name]
+  grant_admin_to_roles = [local.sysadmin_role, module.bulk_roles.roles["DBT_CLOUD"].name, module.bulk_roles.roles["DATAFOLD"].name]
+  grant_admin_to_users = []
   grant_read_to_roles = [
     module.bulk_roles.roles["READER"].name,
     module.bulk_roles.roles["ANALYST"].name,
@@ -114,7 +121,16 @@ module "bulk_role_grants" {
       users = [module.employees.users["EMPLOYEE_A"].name]
     }
     ANALYST = {
+      roles = [local.sysadmin_role]
       users = [for m in module.employees.users : m.name]
+    }
+    DATAFOLD = {
+      roles = [local.sysadmin_role]
+      users = [module.systems.users["DATAFOLD_USER"].name]
+    }
+    DBT_CLOUD = {
+      roles = [local.sysadmin_role]
+      users = [module.systems.users["DBT_CLOUD_USER"].name]
     }
   }
   depends_on = [module.bulk_roles]
@@ -134,6 +150,11 @@ module "bulk_warehouse_grants" {
       roles = [
         module.bulk_roles.roles["ANALYST"].name,
         local.public_role
+      ]
+    }
+    DATAFOLD_WH = {
+      roles = [
+        module.bulk_roles.roles["DATAFOLD"].name,
       ]
     }
   }

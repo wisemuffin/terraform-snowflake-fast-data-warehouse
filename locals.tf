@@ -16,6 +16,7 @@ locals {
     "SUPERSET_USER"  = {}
     "IMMUTA_USER"    = {}
     "HIGHTOUCH_USER" = {}
+    "DATAFOLD_USER"  = {}
     "DBT_CLOUD_USER" = {
     }
   }
