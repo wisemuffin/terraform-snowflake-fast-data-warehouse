@@ -64,7 +64,7 @@ module "bulk_warehouses" {
 // APPLICATION DATABASES
 // databases (and system users) to be leveraged for a single purpose
 module "analytics_db" {
-  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING", "ANALYTICS_TPCH", "ANALYTICS_TPCH_DEV"])
+  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING", "ANALYTICS_TPCH", "ANALYTICS_TPCH_DEV", "ANALYTICS_TPCH_UNIT_TEST"])
   source   = "./modules/application_database"
 
   database_name        = each.value
