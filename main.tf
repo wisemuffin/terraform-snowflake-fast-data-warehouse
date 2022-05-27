@@ -44,8 +44,8 @@ module "bulk_warehouses" {
 
   warehouses = {
     PROCESSING_WH = {
-      warehouse_size = "medium",
-      auto_suspend   = 120,
+      warehouse_size = "x-small",
+      auto_suspend   = 60,
       # create_resource_monitor = true #TODO resource monitors can only be granted by accountadmin. waiting for this to change
     }
     REPORTING_WH = {
@@ -64,7 +64,7 @@ module "bulk_warehouses" {
 // APPLICATION DATABASES
 // databases (and system users) to be leveraged for a single purpose
 module "analytics_db" {
-  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING", "ANALYTICS_TPCH", "ANALYTICS_TPCH_DEV", "ANALYTICS_TPCH_UNIT_TEST"])
+  for_each = toset(["ANALYTICS", "ANALYTICS_TRADING", "ANALYTICS_TPCH", "ANALYTICS_TPCH_DEV", "ANALYTICS_TPCH_UNIT_TEST", "DBT_BUSINESS_INTELLIGENCE"])
   source   = "./modules/application_database"
 
   database_name        = each.value
