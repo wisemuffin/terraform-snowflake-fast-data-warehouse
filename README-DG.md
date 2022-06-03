@@ -24,7 +24,7 @@ Then the following will be built
 # Todo
 - seperate warehouse currently all using PROCESSING_WH
 
-# example of manually setting up roles
+# example 1 of manually setting up roles for tranforming in dbt
 
 ```sql
 USE ROLE ACCOUNTADMIN; -- you need accountadmin (or security admin) for user creation, future grants
@@ -70,7 +70,7 @@ GRANT ROLE YFAEP_TRANSFORMER TO USER YFAEP_DBT_CLOUD;
 GRANT ROLE YFAEP_TRANSFORMER  TO ROLE SYSADMIN;
 ```
 
-second example
+# example 2 - only consuming from data warehouse e.g. reporting tools
 ```sql
 USE ROLE ACCOUNTADMIN; -- you need accountadmin for user creation, future grants
 DROP USER IF EXISTS DBT_BUSINESS_INTELLIGENCE_FLEXIT;
